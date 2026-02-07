@@ -1,1 +1,1 @@
-export const DB_NAME = "app_v3"
+export const DB_NAME = "whattask"

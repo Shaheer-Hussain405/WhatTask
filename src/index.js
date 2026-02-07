@@ -1,6 +1,6 @@
-import { app } from "./app";
+import { app } from "./app.js";
 import dotenv from "dotenv"
-import { connectDB } from "./db/main";
+import { connectDB } from "./db/main.js";
 
 dotenv.config({ path: "../.env" })
 
@@ -15,3 +15,7 @@ connectDB()
 .catch((error)=>{
     console.log("_!_ Error while listning : ",error.message || error)
 })
+
+
+
+

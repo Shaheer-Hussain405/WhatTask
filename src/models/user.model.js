@@ -1,5 +1,5 @@
 import  mongoose,{ Schema } from "mongoose"
-import jwt from"jwt"
+import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 
 const userSchema = new Schema(
@@ -28,7 +28,7 @@ const userSchema = new Schema(
         },
         "avatar":{
             type: String,
-            default: "" // Default Cloudinary Image
+            default: "https://res.cloudinary.com/db-port-all/image/upload/v1770467414/default-profile-picture1_a9w71m.jpg" // Default Cloudinary Image
         },
         "bio":{
             type: String,
@@ -58,7 +58,7 @@ const userSchema = new Schema(
 // MiddleWare --save
 
 userSchema.pre("save", async function(){
-    if (!this.isModified(this.password)) return;
+    if (!this.isModified("password")) return;
     this.password = await bcrypt.hash(this.password,10)
 })
 
@@ -71,9 +71,9 @@ userSchema.methods.isPasswordCorrect = async function(password){
 userSchema.methods.generateAccessToken = function(){
     return jwt.sign(
         {
-            _id,
-            username,
-            email,
+            id: this._id,
+            username: this.username,
+            email: this.email,
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
@@ -85,7 +85,7 @@ userSchema.methods.generateAccessToken = function(){
 userSchema.methods.generateRefreshToken = function(){
     return jwt.sign(
         {
-            _id
+            _id: this._id
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
