@@ -18,8 +18,10 @@ app.use(cookieParser())
 // Routes
 import userRoute from "./routes/user.route.js"
 import taskRoute from "./routes/task.route.js"
+import stickyRoute from "./routes/stickyChit.route.js"
 
 app.use("/api/v3/user", userRoute)
 app.use("/api/v3/task", taskRoute)
+app.use("/api/v3/sticky", stickyRoute)
 
 export { app }

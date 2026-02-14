@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Task } from "../models/task.model.js";
 import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
@@ -23,7 +24,7 @@ const addTask = asyncHandler( async (req, res) => {
         category,
         priority,
         deadline,
-        user: userId,
+        user: new mongoose.Types.ObjectId(userId),
      }
 
      if (subtasks !== undefined){
@@ -42,7 +43,7 @@ const addTask = asyncHandler( async (req, res) => {
         throw new apiError(400,"category not getting matched")
      }
 
-     if (!["basic","medium","high"].includes(priority)){
+     if (![" ","medium","high"].includes(priority)){
         throw new apiError(400,"priority not getting matched")
      }
 
@@ -88,21 +89,26 @@ const updateTask = asyncHandler( async (req, res) => {
    }
 
    const taskId = req.body.taskId;
+   const userId = req.user._id;
    
 
    if (!taskId){
    throw new apiError(401,"please enter taskId")
    }
 
-   const task = await Task.findByIdAndUpdate(taskId,
-   {
-      $set: updateList
-   },
-   { new: true }
+   const task = await Task.findOneAndUpdate(
+      {
+         _id: taskId,
+         user: userId
+      },
+      {
+         $set: updateList
+      },
+      { new: true }
    )
 
    if (!task){
-   throw new apiError(404,"task not found")
+   throw new apiError(401,"authorization access denied")
    }
 
    return res

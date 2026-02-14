@@ -6,7 +6,7 @@ const router = Router()
 
 router.route("/todo").post(verifyToken,addTask)
 
-router.route("/todo").patch(updateTask)
+router.route("/todo").patch(verifyToken,updateTask)
 
 router.route("/todo").get(verifyToken,authTask)
 
